@@ -1,162 +1,167 @@
-// 설정
+// Config
 const CONFIG = {
     owner: 'seedgen-public',
     repo: 'deploy',
-    apiBase: 'https://api.github.com'
+    api: 'https://api.github.com'
 };
 
-// DOM 요소
-const elements = {
-    releaseList: document.getElementById('release-list'),
-    refreshBtn: document.getElementById('refresh-btn')
+// 카테고리 정의 (파일명 패턴 → 카테고리)
+const CATEGORIES = {
+    'OS': { icon: '🖥️', patterns: ['Linux', 'Windows', 'Ubuntu', 'RHEL', 'Server'] },
+    'DBMS': { icon: '🗄️', patterns: ['SQL', 'Oracle', 'Maria', 'Postgre', 'MySQL'] },
+    'PC': { icon: '💻', patterns: ['PC', 'Client'] },
+    '기타': { icon: '📄', patterns: [] }
 };
 
-// 초기화
+// DOM
+const els = {
+    currentVersion: document.getElementById('current-version'),
+    currentScripts: document.getElementById('current-scripts'),
+    historyToggle: document.getElementById('history-toggle'),
+    historyList: document.getElementById('history-list')
+};
+
+// Init
 document.addEventListener('DOMContentLoaded', () => {
     loadReleases();
-    setupEventListeners();
+    els.historyToggle.addEventListener('click', toggleHistory);
 });
 
-function setupEventListeners() {
-    elements.refreshBtn.addEventListener('click', loadReleases);
+// Toggle history
+function toggleHistory() {
+    els.historyToggle.classList.toggle('open');
+    els.historyList.classList.toggle('hidden');
 }
 
-// GitHub API 호출 (인증 없이)
-async function githubAPI(endpoint) {
-    const url = `${CONFIG.apiBase}${endpoint}`;
-
-    const response = await fetch(url, {
-        headers: {
-            'Accept': 'application/vnd.github.v3+json'
-        }
-    });
-
-    if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-    }
-
-    return response.json();
-}
-
-// 릴리즈 목록 로드
+// Load releases
 async function loadReleases() {
-    elements.releaseList.innerHTML = '<p class="loading">릴리즈 로딩 중...</p>';
-
     try {
-        const releases = await githubAPI(`/repos/${CONFIG.owner}/${CONFIG.repo}/releases`);
+        const res = await fetch(`${CONFIG.api}/repos/${CONFIG.owner}/${CONFIG.repo}/releases`);
+        if (!res.ok) throw new Error('Failed to load');
+
+        const releases = await res.json();
 
         if (releases.length === 0) {
-            elements.releaseList.innerHTML = `
-                <div class="empty">
-                    <p>아직 릴리즈가 없습니다.</p>
-                    <p class="hint">release.ps1을 실행하여 첫 릴리즈를 생성하세요.</p>
-                </div>
-            `;
+            els.currentScripts.innerHTML = '<div class="empty">릴리즈가 없습니다</div>';
             return;
         }
 
-        elements.releaseList.innerHTML = releases.map(release => createReleaseItem(release)).join('');
+        // 최신 릴리즈
+        const latest = releases[0];
+        renderCurrentRelease(latest);
 
-    } catch (error) {
-        elements.releaseList.innerHTML = `
-            <div class="error">
-                <p>릴리즈를 불러올 수 없습니다.</p>
-                <p class="hint">${error.message}</p>
-            </div>
-        `;
+        // 이전 릴리즈들
+        if (releases.length > 1) {
+            renderHistory(releases.slice(1));
+        } else {
+            document.querySelector('.history-section').style.display = 'none';
+        }
+
+    } catch (err) {
+        els.currentScripts.innerHTML = `<div class="error">${err.message}</div>`;
     }
 }
 
-// 릴리즈 아이템 HTML 생성
-function createReleaseItem(release) {
-    const date = new Date(release.published_at).toLocaleDateString('ko-KR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+// Render current release
+function renderCurrentRelease(release) {
+    els.currentVersion.textContent = release.tag_name;
+
+    if (!release.assets || release.assets.length === 0) {
+        els.currentScripts.innerHTML = '<div class="empty">파일이 없습니다</div>';
+        return;
+    }
+
+    // 카테고리별로 분류
+    const categorized = categorizeFiles(release.assets);
+
+    let html = '';
+    for (const [category, files] of Object.entries(categorized)) {
+        if (files.length === 0) continue;
+
+        const info = CATEGORIES[category] || CATEGORIES['기타'];
+        html += `
+            <div class="category">
+                <div class="category-header">
+                    <span class="category-icon">${info.icon}</span>
+                    <span>${category}</span>
+                    <span style="color: var(--gray-500); font-weight: normal; font-size: 0.8rem;">(${files.length})</span>
+                </div>
+                <div class="category-files">
+                    ${files.map(f => renderFile(f)).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    els.currentScripts.innerHTML = html;
+}
+
+// Categorize files
+function categorizeFiles(assets) {
+    const result = {};
+    Object.keys(CATEGORIES).forEach(cat => result[cat] = []);
+
+    assets.forEach(asset => {
+        let matched = false;
+        for (const [category, info] of Object.entries(CATEGORIES)) {
+            if (category === '기타') continue;
+            if (info.patterns.some(p => asset.name.toLowerCase().includes(p.toLowerCase()))) {
+                result[category].push(asset);
+                matched = true;
+                break;
+            }
+        }
+        if (!matched) {
+            result['기타'].push(asset);
+        }
     });
 
-    const tagClass = release.prerelease ? 'release-tag prerelease' : 'release-tag';
-
-    // Asset 파일들
-    let assetsHtml = '';
-    if (release.assets && release.assets.length > 0) {
-        assetsHtml = `
-            <div class="assets-section">
-                <h4>다운로드 파일</h4>
-                <div class="assets-grid">
-                    ${release.assets.map(asset => createAssetItem(asset)).join('')}
-                </div>
-            </div>
-        `;
-    } else {
-        assetsHtml = '<p class="no-assets">첨부된 파일이 없습니다.</p>';
-    }
-
-    // 릴리즈 본문 (마크다운 간단 처리)
-    let bodyHtml = '';
-    if (release.body) {
-        bodyHtml = `<div class="release-body">${formatReleaseBody(release.body)}</div>`;
-    }
-
-    return `
-        <div class="release-item">
-            <div class="release-header">
-                <div class="release-info">
-                    <span class="release-title">${release.name || release.tag_name}</span>
-                    <span class="${tagClass}">${release.tag_name}</span>
-                    ${release.prerelease ? '<span class="prerelease-badge">Pre-release</span>' : ''}
-                </div>
-                <span class="release-date">${date}</span>
-            </div>
-            ${bodyHtml}
-            ${assetsHtml}
-        </div>
-    `;
+    return result;
 }
 
-// Asset 아이템 HTML 생성
-function createAssetItem(asset) {
-    const icon = getFileIcon(asset.name);
+// Render file item
+function renderFile(asset) {
+    const icon = getIcon(asset.name);
     const size = formatSize(asset.size);
 
     return `
-        <a href="${asset.browser_download_url}" class="asset-item" download>
-            <span class="asset-icon">${icon}</span>
-            <span class="asset-name">${asset.name}</span>
-            <span class="asset-size">${size}</span>
-            <span class="download-icon">⬇️</span>
+        <a href="${asset.browser_download_url}" class="file-item" download>
+            <span class="file-icon">${icon}</span>
+            <div class="file-info">
+                <div class="file-name">${asset.name}</div>
+                <div class="file-meta">${size}</div>
+            </div>
+            <span class="download-btn">↓</span>
         </a>
     `;
 }
 
-// 파일 아이콘
-function getFileIcon(filename) {
-    const ext = filename.split('.').pop().toLowerCase();
-    const icons = {
-        'ps1': '🔷',
-        'sh': '🔶',
-        'bat': '🟦',
-        'cmd': '🟦',
-        'py': '🐍',
-        'zip': '📦',
-        'tar': '📦',
-        'gz': '📦'
-    };
+// Get file icon
+function getIcon(name) {
+    const ext = name.split('.').pop().toLowerCase();
+    const icons = { ps1: '🔷', sh: '🔶', bat: '🟦', cmd: '🟦', py: '🐍' };
     return icons[ext] || '📄';
 }
 
-// 파일 크기 포맷
+// Format size
 function formatSize(bytes) {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 }
 
-// 릴리즈 본문 간단 포맷
-function formatReleaseBody(body) {
-    return body
-        .replace(/^## (.+)$/gm, '<h4>$1</h4>')
-        .replace(/^- \*\*(.+?)\*\* \((.+?)\)$/gm, '<div class="script-item"><strong>$1</strong> <span class="category">$2</span></div>')
-        .replace(/^- (.+)$/gm, '<li>$1</li>')
-        .replace(/\n/g, '');
+// Render history
+function renderHistory(releases) {
+    els.historyList.innerHTML = releases.map(r => {
+        const date = new Date(r.published_at).toLocaleDateString('ko-KR');
+        return `
+            <div class="history-item">
+                <div class="history-info">
+                    <span class="history-version">${r.tag_name}</span>
+                    <span class="history-date">${date}</span>
+                </div>
+                <a href="${r.html_url}" target="_blank" class="history-link">보기 →</a>
+            </div>
+        `;
+    }).join('');
 }

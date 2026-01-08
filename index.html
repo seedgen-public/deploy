@@ -3,41 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Script Deploy - 진단 스크립트 다운로드</title>
+    <title>Script Deploy | Seedgen</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Script Deploy</h1>
-            <p class="subtitle">인프라 진단 스크립트 다운로드 허브</p>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <img src="res/SEEDGEN CI (PNG).png" alt="Seedgen" class="logo">
+                <span class="divider"></span>
+                <span class="title">Script Deploy</span>
+            </div>
         </header>
 
-        <!-- 릴리즈 목록 -->
-        <section id="releases-section" class="card">
-            <div class="section-header">
-                <h2>릴리즈 목록</h2>
-                <button id="refresh-btn" class="btn btn-secondary btn-small">새로고침</button>
-            </div>
-            <div id="release-list" class="release-list">
-                <p class="loading">릴리즈 로딩 중...</p>
-            </div>
-        </section>
+        <!-- Main -->
+        <main class="main">
+            <!-- Current Release -->
+            <section class="current-section">
+                <div class="section-header">
+                    <h2>현재 버전</h2>
+                    <div id="current-version" class="version-tag">-</div>
+                </div>
+                <div id="current-scripts" class="scripts-container">
+                    <div class="loading">로딩 중...</div>
+                </div>
+            </section>
 
-        <!-- 안내 -->
-        <section class="card info-card">
-            <h3>사용 방법</h3>
-            <ol>
-                <li>원하는 릴리즈 버전 선택</li>
-                <li>필요한 스크립트 파일 개별 다운로드</li>
-                <li>대상 시스템에서 실행</li>
-            </ol>
-            <p class="hint">
-                <a href="https://github.com/seedgen-public/deploy/releases" target="_blank">
-                    GitHub Releases에서 직접 보기
-                </a>
-            </p>
-        </section>
+            <!-- History -->
+            <section class="history-section">
+                <button class="history-toggle" id="history-toggle">
+                    <span>이전 버전</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+                <div id="history-list" class="history-list hidden">
+                    <!-- 이전 릴리즈들 -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <span>&copy; 2025 Seedgen</span>
+        </footer>
     </div>
 
     <script src="app.js"></script>

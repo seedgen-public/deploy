@@ -1,6 +1,9 @@
 # 로컬 도구 (페이지에 불필요)
 release.ps1
 
+# 환경변수 (토큰 포함)
+.env
+
 # Claude 설정
 .claude/
 
