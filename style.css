@@ -56,6 +56,7 @@ body {
 .header {
     display: flex;
     align-items: center;
+    gap: 12px;
     padding: 12px 24px;
     background: var(--surface);
     border-bottom: 1px solid var(--divider-light);
@@ -65,20 +66,17 @@ body {
     z-index: 100;
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
 .logo {
-    height: 24px;
+    height: 20px;
+    width: auto;
+    object-fit: contain;
 }
 
 .divider {
     width: 1px;
     height: 16px;
     background: var(--divider);
+    flex-shrink: 0;
 }
 
 .title {

@@ -6,17 +6,8 @@ const CONFIG = {
 };
 
 // 카테고리 정의 (scriptlist.md 기반)
+// 순서 중요: 더 구체적인 패턴(DBMS)을 먼저 체크해야 함
 const CATEGORIES = [
-    {
-        name: 'OS',
-        icon: '🖥️',
-        desc: '운영체제',
-        patterns: [
-            { match: 'Linux.sh', platform: 'RHEL', code: 'U' },
-            { match: 'Ubuntu.sh', platform: 'Ubuntu', code: 'U' },
-            { match: 'WindowsServer', platform: 'Windows Server', code: 'W' }
-        ]
-    },
     {
         name: 'DBMS',
         icon: '🗄️',
@@ -47,6 +38,16 @@ const CATEGORIES = [
         patterns: [
             { match: 'WindowsPC', platform: 'Windows', code: 'PC' },
             { match: 'PC_Check', platform: 'Windows', code: 'PC' }
+        ]
+    },
+    {
+        name: 'OS',
+        icon: '🖥️',
+        desc: '운영체제',
+        patterns: [
+            { match: 'Linux.sh', platform: 'RHEL', code: 'U' },
+            { match: 'Ubuntu.sh', platform: 'Ubuntu', code: 'U' },
+            { match: 'WindowsServer', platform: 'Windows Server', code: 'W' }
         ]
     }
 ];
