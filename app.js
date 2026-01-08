@@ -5,18 +5,57 @@ const CONFIG = {
     api: 'https://api.github.com'
 };
 
-// 카테고리 정의 (파일명 패턴 → 카테고리)
-const CATEGORIES = {
-    'OS': { icon: '🖥️', patterns: ['Linux', 'Windows', 'Ubuntu', 'RHEL', 'Server'] },
-    'DBMS': { icon: '🗄️', patterns: ['SQL', 'Oracle', 'Maria', 'Postgre', 'MySQL'] },
-    'PC': { icon: '💻', patterns: ['PC', 'Client'] },
-    '기타': { icon: '📄', patterns: [] }
-};
+// 카테고리 정의 (scriptlist.md 기반)
+const CATEGORIES = [
+    {
+        name: 'OS',
+        icon: '🖥️',
+        desc: '운영체제',
+        patterns: [
+            { match: 'Linux.sh', platform: 'RHEL', code: 'U' },
+            { match: 'Ubuntu.sh', platform: 'Ubuntu', code: 'U' },
+            { match: 'WindowsServer', platform: 'Windows Server', code: 'W' }
+        ]
+    },
+    {
+        name: 'DBMS',
+        icon: '🗄️',
+        desc: '데이터베이스',
+        patterns: [
+            { match: 'MySQL', platform: 'Linux', code: 'M' },
+            { match: 'Oracle', platform: 'Linux', code: 'O' },
+            { match: 'MSSQL', platform: 'Windows', code: 'S' },
+            { match: 'PostgreSQL', platform: 'Linux', code: 'P' },
+            { match: 'MariaDB', platform: 'Linux', code: '-' }
+        ]
+    },
+    {
+        name: 'WEB/WAS',
+        icon: '🌐',
+        desc: '웹/WAS',
+        patterns: [
+            { match: 'Apache', platform: '-', code: 'WA' },
+            { match: 'Nginx', platform: '-', code: 'WN' },
+            { match: 'Tomcat', platform: '-', code: 'WT' },
+            { match: 'IIS', platform: 'Windows', code: 'WI' }
+        ]
+    },
+    {
+        name: 'PC',
+        icon: '💻',
+        desc: 'PC 진단',
+        patterns: [
+            { match: 'WindowsPC', platform: 'Windows', code: 'PC' },
+            { match: 'PC_Check', platform: 'Windows', code: 'PC' }
+        ]
+    }
+];
 
 // DOM
 const els = {
     currentVersion: document.getElementById('current-version'),
-    currentScripts: document.getElementById('current-scripts'),
+    releaseDate: document.getElementById('release-date'),
+    scriptsGrid: document.getElementById('scripts-grid'),
     historyToggle: document.getElementById('history-toggle'),
     historyList: document.getElementById('history-list')
 };
@@ -37,18 +76,17 @@ function toggleHistory() {
 async function loadReleases() {
     try {
         const res = await fetch(`${CONFIG.api}/repos/${CONFIG.owner}/${CONFIG.repo}/releases`);
-        if (!res.ok) throw new Error('Failed to load');
+        if (!res.ok) throw new Error('릴리즈를 불러올 수 없습니다');
 
         const releases = await res.json();
 
         if (releases.length === 0) {
-            els.currentScripts.innerHTML = '<div class="empty">릴리즈가 없습니다</div>';
+            els.scriptsGrid.innerHTML = '<div class="empty">릴리즈가 없습니다</div>';
             return;
         }
 
         // 최신 릴리즈
-        const latest = releases[0];
-        renderCurrentRelease(latest);
+        renderCurrentRelease(releases[0]);
 
         // 이전 릴리즈들
         if (releases.length > 1) {
@@ -58,80 +96,103 @@ async function loadReleases() {
         }
 
     } catch (err) {
-        els.currentScripts.innerHTML = `<div class="error">${err.message}</div>`;
+        els.scriptsGrid.innerHTML = `<div class="error">${err.message}</div>`;
     }
+}
+
+// 파일 분류
+function categorizeFile(filename) {
+    for (const cat of CATEGORIES) {
+        for (const p of cat.patterns) {
+            if (filename.includes(p.match)) {
+                return {
+                    category: cat.name,
+                    icon: cat.icon,
+                    platform: p.platform,
+                    code: p.code
+                };
+            }
+        }
+    }
+    return { category: '기타', icon: '📄', platform: '-', code: '-' };
 }
 
 // Render current release
 function renderCurrentRelease(release) {
     els.currentVersion.textContent = release.tag_name;
 
+    // 릴리즈 날짜 표시
+    if (release.published_at) {
+        const date = new Date(release.published_at).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        els.releaseDate.textContent = `배포일: ${date}`;
+    }
+
     if (!release.assets || release.assets.length === 0) {
-        els.currentScripts.innerHTML = '<div class="empty">파일이 없습니다</div>';
+        els.scriptsGrid.innerHTML = '<div class="empty">배포된 파일이 없습니다</div>';
         return;
     }
 
-    // 카테고리별로 분류
-    const categorized = categorizeFiles(release.assets);
+    // 카테고리별로 그룹화
+    const groups = {};
+    CATEGORIES.forEach(cat => groups[cat.name] = { icon: cat.icon, desc: cat.desc, files: [] });
+    groups['기타'] = { icon: '📄', desc: '기타', files: [] };
 
+    release.assets.forEach(asset => {
+        const info = categorizeFile(asset.name);
+        if (!groups[info.category]) {
+            groups[info.category] = { icon: info.icon, desc: info.category, files: [] };
+        }
+        groups[info.category].files.push({
+            ...asset,
+            platform: info.platform,
+            code: info.code
+        });
+    });
+
+    // HTML 생성
     let html = '';
-    for (const [category, files] of Object.entries(categorized)) {
-        if (files.length === 0) continue;
+    for (const [catName, catData] of Object.entries(groups)) {
+        if (catData.files.length === 0) continue;
 
-        const info = CATEGORIES[category] || CATEGORIES['기타'];
         html += `
             <div class="category">
                 <div class="category-header">
-                    <span class="category-icon">${info.icon}</span>
-                    <span>${category}</span>
-                    <span style="color: var(--gray-500); font-weight: normal; font-size: 0.8rem;">(${files.length})</span>
+                    <span class="category-icon">${catData.icon}</span>
+                    <span class="category-name">${catName}</span>
+                    <span class="category-desc">${catData.desc}</span>
+                    <span class="category-count">${catData.files.length}</span>
                 </div>
                 <div class="category-files">
-                    ${files.map(f => renderFile(f)).join('')}
+                    ${catData.files.map(f => renderFile(f)).join('')}
                 </div>
             </div>
         `;
     }
 
-    els.currentScripts.innerHTML = html;
-}
-
-// Categorize files
-function categorizeFiles(assets) {
-    const result = {};
-    Object.keys(CATEGORIES).forEach(cat => result[cat] = []);
-
-    assets.forEach(asset => {
-        let matched = false;
-        for (const [category, info] of Object.entries(CATEGORIES)) {
-            if (category === '기타') continue;
-            if (info.patterns.some(p => asset.name.toLowerCase().includes(p.toLowerCase()))) {
-                result[category].push(asset);
-                matched = true;
-                break;
-            }
-        }
-        if (!matched) {
-            result['기타'].push(asset);
-        }
-    });
-
-    return result;
+    els.scriptsGrid.innerHTML = html;
 }
 
 // Render file item
-function renderFile(asset) {
-    const icon = getIcon(asset.name);
-    const size = formatSize(asset.size);
+function renderFile(file) {
+    const icon = getIcon(file.name);
+    const size = formatSize(file.size);
+    const ext = file.name.split('.').pop().toUpperCase();
 
     return `
-        <a href="${asset.browser_download_url}" class="file-item" download>
+        <a href="${file.browser_download_url}" class="file-item" download>
             <span class="file-icon">${icon}</span>
             <div class="file-info">
-                <div class="file-name">${asset.name}</div>
-                <div class="file-meta">${size}</div>
+                <div class="file-name">${file.name}</div>
+                <div class="file-meta">
+                    <span class="file-platform">${file.platform}</span>
+                    <span class="file-size">${size}</span>
+                </div>
             </div>
-            <span class="download-btn">↓</span>
+            <span class="file-ext">${ext}</span>
         </a>
     `;
 }
@@ -139,8 +200,7 @@ function renderFile(asset) {
 // Get file icon
 function getIcon(name) {
     const ext = name.split('.').pop().toLowerCase();
-    const icons = { ps1: '🔷', sh: '🔶', bat: '🟦', cmd: '🟦', py: '🐍' };
-    return icons[ext] || '📄';
+    return { ps1: '🔷', sh: '🔶', bat: '🟦', cmd: '🟦', py: '🐍' }[ext] || '📄';
 }
 
 // Format size
@@ -154,13 +214,15 @@ function formatSize(bytes) {
 function renderHistory(releases) {
     els.historyList.innerHTML = releases.map(r => {
         const date = new Date(r.published_at).toLocaleDateString('ko-KR');
+        const count = r.assets ? r.assets.length : 0;
         return `
             <div class="history-item">
                 <div class="history-info">
                     <span class="history-version">${r.tag_name}</span>
                     <span class="history-date">${date}</span>
+                    <span class="history-count">${count}개 파일</span>
                 </div>
-                <a href="${r.html_url}" target="_blank" class="history-link">보기 →</a>
+                <a href="${r.html_url}" target="_blank" class="history-link">GitHub에서 보기</a>
             </div>
         `;
     }).join('');

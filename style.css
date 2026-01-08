@@ -87,11 +87,64 @@ body {
     color: var(--text);
 }
 
+/* ===== Version Banner ===== */
+.version-banner {
+    background: linear-gradient(135deg, var(--primary) 0%, #2D8A1A 100%);
+    color: white;
+    padding: 32px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.version-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+}
+
+.version-info {
+    position: relative;
+    z-index: 1;
+}
+
+.version-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0.9;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.version-number {
+    display: block;
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.release-date {
+    position: relative;
+    z-index: 1;
+    margin-top: 12px;
+    font-size: 13px;
+    opacity: 0.85;
+}
+
 /* ===== Main ===== */
 .main {
     flex: 1;
     padding: 24px;
-    max-width: 960px;
+    max-width: 1024px;
     margin: 0 auto;
     width: 100%;
 }
@@ -256,47 +309,51 @@ body {
 
 /* ===== History Section (Fluent Expander) ===== */
 .history-section {
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-2);
-    border: 1px solid var(--divider-light);
-    overflow: hidden;
+    max-width: 1024px;
+    margin: 0 auto 24px;
+    padding: 0 24px;
+    width: 100%;
 }
 
 .history-toggle {
     width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 10px;
     padding: 14px 20px;
     background: var(--surface);
-    border: none;
+    border: 1px solid var(--divider-light);
+    border-radius: var(--radius-lg);
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
     color: var(--text-secondary);
     font-family: inherit;
-    transition: background var(--duration) var(--ease);
+    transition: all var(--duration) var(--ease);
+    box-shadow: var(--shadow-2);
 }
 
 .history-toggle:hover {
     background: var(--surface-hover);
+    border-color: var(--divider);
 }
 
-.toggle-icon {
-    font-size: 10px;
-    color: var(--text-tertiary);
-    transition: transform var(--duration) var(--ease);
+.history-toggle.open {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
-.history-toggle.open .toggle-icon {
-    transform: rotate(180deg);
+.history-toggle span:not([class]) {
+    flex: 1;
+    text-align: left;
 }
 
 .history-list {
-    border-top: 1px solid var(--divider-light);
-    padding: 8px 20px;
-    background: var(--bg);
+    border: 1px solid var(--divider-light);
+    border-top: none;
+    padding: 12px 20px;
+    background: var(--surface);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    box-shadow: var(--shadow-2);
 }
 
 .history-list.hidden {
@@ -347,17 +404,64 @@ body {
     background: var(--primary-bg);
 }
 
+/* ===== Scripts Grid ===== */
+.scripts-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* ===== Icon Classes ===== */
+.icon-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--divider);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.toggle-icon-svg {
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+
+.chevron-icon {
+    flex-shrink: 0;
+    opacity: 0.5;
+    transition: transform var(--duration) var(--ease);
+}
+
+.history-toggle.open .chevron-icon {
+    transform: rotate(180deg);
+}
+
 /* ===== States ===== */
 .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
     text-align: center;
-    padding: 48px 24px;
+    padding: 64px 24px;
     color: var(--text-tertiary);
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--divider-light);
 }
 
 .empty {
     text-align: center;
-    padding: 48px 24px;
+    padding: 64px 24px;
     color: var(--text-tertiary);
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--divider-light);
 }
 
 .error {
