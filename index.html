@@ -3,108 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Script Deploy - seedgen-public</title>
+    <title>Script Deploy - 진단 스크립트 다운로드</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Script Deploy</h1>
-            <p class="subtitle">seedgen-public/script 배포 페이지</p>
+            <p class="subtitle">인프라 진단 스크립트 다운로드 허브</p>
         </header>
 
-        <!-- 인증 섹션 -->
-        <section id="auth-section" class="card">
-            <h2>GitHub 인증</h2>
-            <div class="auth-form">
-                <input type="password" id="token-input" placeholder="GitHub Personal Access Token 입력">
-                <div class="auth-actions">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="save-token">
-                        토큰 저장 (로컬)
-                    </label>
-                    <button id="connect-btn" class="btn btn-primary">연결</button>
-                </div>
-            </div>
-            <p class="hint">
-                <a href="https://github.com/settings/tokens/new?scopes=repo" target="_blank">
-                    Personal Access Token 생성하기
-                </a> (repo 권한 필요)
-            </p>
-        </section>
-
-        <!-- 연결 상태 -->
-        <section id="status-section" class="card hidden">
-            <div class="status-bar">
-                <span id="connection-status"></span>
-                <button id="disconnect-btn" class="btn btn-secondary btn-small">연결 해제</button>
-            </div>
-        </section>
-
-        <!-- 탭 네비게이션 -->
-        <nav id="tab-nav" class="tabs hidden">
-            <button class="tab-btn active" data-tab="files">파일 목록</button>
-            <button class="tab-btn" data-tab="releases">릴리즈</button>
-        </nav>
-
-        <!-- 파일 목록 탭 -->
-        <section id="files-tab" class="card tab-content hidden">
+        <!-- 릴리즈 목록 -->
+        <section id="releases-section" class="card">
             <div class="section-header">
-                <h2>스크립트 파일</h2>
-                <div class="path-nav">
-                    <span id="current-path">/</span>
-                    <button id="refresh-btn" class="btn btn-secondary btn-small">새로고침</button>
-                </div>
-            </div>
-            <div id="file-list" class="file-list">
-                <p class="loading">로딩 중...</p>
-            </div>
-        </section>
-
-        <!-- 릴리즈 탭 -->
-        <section id="releases-tab" class="card tab-content hidden">
-            <div class="section-header">
-                <h2>릴리즈</h2>
-                <button id="create-release-btn" class="btn btn-primary btn-small">새 릴리즈</button>
+                <h2>릴리즈 목록</h2>
+                <button id="refresh-btn" class="btn btn-secondary btn-small">새로고침</button>
             </div>
             <div id="release-list" class="release-list">
-                <p class="loading">로딩 중...</p>
+                <p class="loading">릴리즈 로딩 중...</p>
             </div>
         </section>
 
-        <!-- 릴리즈 생성 모달 -->
-        <div id="release-modal" class="modal hidden">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>새 릴리즈 생성</h3>
-                    <button class="modal-close">&times;</button>
-                </div>
-                <form id="release-form">
-                    <div class="form-group">
-                        <label for="release-tag">태그 이름</label>
-                        <input type="text" id="release-tag" placeholder="v1.0.0" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="release-name">릴리즈 제목</label>
-                        <input type="text" id="release-name" placeholder="Release v1.0.0">
-                    </div>
-                    <div class="form-group">
-                        <label for="release-body">설명</label>
-                        <textarea id="release-body" rows="4" placeholder="릴리즈 노트..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="release-prerelease">
-                            Pre-release
-                        </label>
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary modal-cancel">취소</button>
-                        <button type="submit" class="btn btn-primary">생성</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <!-- 안내 -->
+        <section class="card info-card">
+            <h3>사용 방법</h3>
+            <ol>
+                <li>원하는 릴리즈 버전 선택</li>
+                <li>필요한 스크립트 파일 개별 다운로드</li>
+                <li>대상 시스템에서 실행</li>
+            </ol>
+            <p class="hint">
+                <a href="https://github.com/seedgen-public/deploy/releases" target="_blank">
+                    GitHub Releases에서 직접 보기
+                </a>
+            </p>
+        </section>
     </div>
 
     <script src="app.js"></script>
