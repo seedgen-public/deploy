@@ -7,52 +7,35 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app">
-        <!-- Header -->
-        <header class="header">
+    <header>
+        <div class="header-content">
             <img src="res/SEEDGEN CI (PNG).png" alt="Seedgen" class="logo">
-            <span class="divider"></span>
-            <span class="title">Script Deploy</span>
-        </header>
+            <h1>Script Deploy</h1>
+        </div>
+    </header>
 
-        <!-- Version Banner -->
-        <section class="version-banner">
-            <div class="version-info">
-                <span class="version-label">현재 버전</span>
-                <span id="current-version" class="version-number">-</span>
-            </div>
-            <div id="release-date" class="release-date"></div>
+    <main>
+        <section class="version-section">
+            <span class="version-label">현재 버전</span>
+            <span class="version" id="current-version">-</span>
+            <span class="date" id="release-date"></span>
         </section>
 
-        <!-- Main Content -->
-        <main class="main">
-            <div id="scripts-grid" class="scripts-grid">
-                <div class="loading">
-                    <i class="icon-spinner"></i>
-                    <span>스크립트 로딩 중...</span>
-                </div>
-            </div>
-        </main>
-
-        <!-- History -->
-        <section class="history-section">
-            <button class="history-toggle" id="history-toggle">
-                <svg class="toggle-icon-svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M8 2a6 6 0 1 0 0 12A6 6 0 0 0 8 2ZM1 8a7 7 0 1 1 14 0A7 7 0 0 1 1 8Zm7.5-3.5a.5.5 0 0 0-1 0V8c0 .18.098.35.254.44l2.5 1.5a.5.5 0 0 0 .514-.858L8.5 7.74V4.5Z"/>
-                </svg>
-                <span>이전 버전 보기</span>
-                <svg class="chevron-icon" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                    <path d="M2.22 4.47a.75.75 0 0 1 1.06 0L6 7.19l2.72-2.72a.75.75 0 1 1 1.06 1.06L6.53 8.78a.75.75 0 0 1-1.06 0L2.22 5.53a.75.75 0 0 1 0-1.06Z"/>
-                </svg>
-            </button>
-            <div id="history-list" class="history-list hidden"></div>
+        <section id="scripts-container" class="scripts-container">
+            <div class="loading">스크립트 로딩 중...</div>
         </section>
 
-        <!-- Footer -->
-        <footer class="footer">
-            &copy; 2025 Seedgen Security Team
-        </footer>
-    </div>
+        <section class="history-section" id="history-section">
+            <details>
+                <summary>이전 버전</summary>
+                <div id="history-list"></div>
+            </details>
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2025 Seedgen Security Team
+    </footer>
 
     <script src="app.js"></script>
 </body>
