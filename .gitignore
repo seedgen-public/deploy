@@ -7,6 +7,9 @@ release.ps1
 # Claude 설정
 .claude/
 
+# 개발/테스트
+dev/
+
 # 기타
 *.log
 .DS_Store
