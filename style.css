@@ -368,6 +368,12 @@ body {
 .file-icon.iis { background: #EFF6FF; }
 .file-icon.iis svg { fill: #0078D4; }
 
+.file-icon.jeus { background: #FEF3C7; }
+.file-icon.jeus svg { stroke: #D97706; fill: none; }
+
+.file-icon.webtob { background: #DBEAFE; }
+.file-icon.webtob svg { stroke: #2563EB; fill: none; }
+
 .file-icon.linux { background: #FEF9C3; }
 .file-icon.linux svg { fill: #FCC624; }
 
