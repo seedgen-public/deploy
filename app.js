@@ -1,37 +1,27 @@
 // Config
 const CONFIG = {
-    owner: 'seedgen-public',
-    repo: 'deploy',
-    api: 'https://api.github.com'
+    releasesUrl: './releases.json'
 };
 
-// 카테고리 (순서: OS -> DBMS -> WEB/WAS -> PC)
-const CATEGORIES = [
-    {
-        name: 'OS',
-        cssClass: 'os',
-        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>',
-        patterns: ['Linux', 'Ubuntu', 'WindowsServer']
-    },
-    {
-        name: 'DBMS',
+// 카테고리 아이콘 (순서: DBMS -> WEB/WAS -> PC -> OS)
+const CATEGORY_ICONS = {
+    'DBMS': {
         cssClass: 'dbms',
-        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>',
-        patterns: ['MySQL', 'Oracle', 'MSSQL', 'PostgreSQL', 'MariaDB']
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>'
     },
-    {
-        name: 'WEB/WAS',
+    'WEB/WAS': {
         cssClass: 'web',
-        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>',
-        patterns: ['Apache', 'Nginx', 'Tomcat', 'IIS']
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>'
     },
-    {
-        name: 'PC',
+    'PC': {
         cssClass: 'pc',
-        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="12" x="3" y="4" rx="2" ry="2"/><line x1="2" x2="22" y1="20" y2="20"/></svg>',
-        patterns: ['WindowsPC', 'PC_Check']
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="12" x="3" y="4" rx="2" ry="2"/><line x1="2" x2="22" y1="20" y2="20"/></svg>'
+    },
+    'OS': {
+        cssClass: 'os',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>'
     }
-];
+};
 
 // Simple Icons SVG paths
 const BRAND_ICONS = {
@@ -39,13 +29,18 @@ const BRAND_ICONS = {
     oracle: '<svg viewBox="0 0 24 24"><path d="M16.412 4.412h-8.82a7.588 7.588 0 0 0-.008 15.176h8.828a7.588 7.588 0 0 0 0-15.176zm-.193 12.502H7.786a4.915 4.915 0 0 1 0-9.828h8.433a4.914 4.914 0 1 1 0 9.828z"/></svg>',
     mssql: '<svg viewBox="0 0 24 24"><path d="M4.105 4.105S9.158 1.58 11.684.316a3.079 3.079 0 0 1 1.481-.315c.766.047 1.677.788 1.677.788L24 9.948v9.789h-4.263V24H.002v-8.556C.002 13.337-.074 9.2 4.105 4.105zm4.334 10.369l2.06 3.293 4.078-5.797-6.138 2.504zm10.413 5.315V12.32l-7.832 3.2 3.2 5.128h4.226c.146-.022.406-.22.406-.86zM4 17.717c0 .206.024.342.065.443.4.973 1.063 1.84 1.063 1.84h8.236l-3.278-5.238c-1.506.388-4.3 1.862-5.564 2.606-.224.132-.469.27-.522.349z"/></svg>',
     postgresql: '<svg viewBox="0 0 24 24"><path d="M23.5594 14.7228a.5269.5269 0 0 0-.0563-.1191c-.139-.2632-.4768-.3418-1.0074-.2321-1.6533.3411-2.2935.1312-2.5256-.0191 1.342-2.0482 2.445-4.522 3.0411-6.8297.2714-1.0507.7982-3.5237.1222-4.7316a1.5641 1.5641 0 0 0-.1509-.235C21.6931.9086 19.8007.0248 17.5099.0005c-1.4947-.0158-2.7705.3461-3.1161.4794a9.449 9.449 0 0 0-.5159-.0816 8.044 8.044 0 0 0-1.3114-.1278c-1.1822-.0184-2.2038.2642-3.0498.8406-.8573-.3211-4.7888-1.645-7.2219.0788C.9359 2.1526.3086 3.8733.4302 6.3165c.0377.7562.2798 2.2445.6821 3.9127.4012 1.6652.888 3.1399 1.3734 4.1561.4866 1.0185.9311 1.6228 1.3857 1.8376.2401.1133.5608.1763.9501.1763.5368 0 1.1986-.1253 1.9739-.3748.2464-.0793.4929-.1585.7094-.2338.0162.0349.0324.0699.0486.0999.0979.1859.2618.4267.4357.6088-.1167.0295-.2334.0591-.3501.0886-1.7496.4428-3.3412.8449-3.4292 1.9173-.0297.3631.0674.7286.2921 1.0869.8282 1.321 3.2039 2.0768 6.3118 2.0105.2086-.0044.4173-.0132.6268-.026l-.0024.0013c1.2866-.0469 2.5959-.4747 3.7461-1.188.09-.0558.2356-.0514.3727-.0465l.0134.0005c.0578.0023.1156.0044.1735.0053 1.0652.0159 1.9352-.1362 2.5878-.4519.5765-.2788 1.0133-.6786 1.3139-1.0873a1.8573 1.8573 0 0 0 .2866-.4015c.0315-.0594.0529-.1015.0659-.1267l.0099-.0193c.1914-.3564.3588-.6689.4891-.9497a.3726.3726 0 0 0 .0317-.1067.55.55 0 0 0-.0017-.1364c.0178-.0445.0344-.0858.0502-.1254.1488-.3717.2461-.6171.2819-.6684.5765-.8259 1.0504-1.3739 1.4227-1.6464a.5634.5634 0 0 0 .212-.5765z"/></svg>',
+    mariadb: '<svg viewBox="0 0 24 24"><path d="M23.157 4.412c-.676.284-.79.31-1.673.372-.65.046-1.14-.046-1.53-.155-.257-.073-.43-.137-.544-.137-.1 0-.227.047-.253.247-.027.205.108.4.108.4s.236.373.257.446c.016.055.05.235-.024.382-.257.506-1.2 1.126-1.876 1.483-.664.35-1.88.76-2.3.823-.372.057-1.01.083-1.473.052-.64-.042-1.074-.156-1.22-.195a6.628 6.628 0 0 1-.323-.103c-.166-.058-.368-.16-.424-.18-.12-.043-.246-.154-.3-.35-.06-.22.04-.425.09-.567.036-.105.152-.35.152-.35s-.052-.046-.16-.07c-.107-.02-.237.07-.344.22-.125.177-.302.503-.354.765-.066.34-.05.543.064.825.105.26.287.445.287.445s-.093.18-.148.33c-.055.145-.08.348-.045.55.054.327.2.525.287.62.087.097.186.177.186.177s-.073.106-.1.188c-.05.12-.067.245-.018.435.047.18.155.322.336.388.15.056.358.06.584.053.34-.012.613-.05.705-.06.093-.01.307-.044.524-.084.152-.028.34-.08.586-.193.303-.14.526-.336.697-.57.163-.227.274-.5.306-.772.013-.112.014-.216.01-.31a.737.737 0 0 0-.022-.143c-.005-.023-.017-.054-.017-.054s.17-.035.297-.082c.17-.06.384-.156.56-.31.19-.17.328-.4.385-.636.035-.148.04-.305.023-.453-.02-.188-.065-.33-.08-.38-.017-.052-.06-.137-.06-.137s.33-.166.473-.256c.228-.144.577-.402.897-.748.236-.256.526-.67.744-1.155.122-.27.288-.65.398-1.115.073-.306.124-.673.145-1.07 0 0-.13.074-.31.202a3.15 3.15 0 0 0-.542.49c-.09.102-.16.2-.28.422-.125.23-.232.472-.293.615-.2.464-.53 1.175-.97 1.596-.193.186-.343.266-.56.31-.19.038-.374.037-.517 0 0 0 .017-.112.02-.215.006-.147-.01-.254-.04-.365-.035-.137-.09-.245-.09-.245s.09-.012.178-.078a.758.758 0 0 0 .178-.211c.07-.122.115-.297.095-.438-.032-.21-.14-.312-.26-.373-.126-.065-.27-.088-.338-.094a1.48 1.48 0 0 0-.393.012c-.275.044-.505.14-.668.21-.163.073-.277.137-.277.137s-.036-.082-.085-.157a.8.8 0 0 0-.172-.178c-.13-.098-.3-.136-.447-.12-.262.03-.414.234-.466.412-.05.17-.033.327-.015.418.026.13.072.213.072.213s-.112.04-.244.11c-.202.108-.453.284-.614.577-.11.2-.166.433-.16.666.003.158.035.303.102.448.122.266.32.446.54.555.182.09.382.14.567.156a1.37 1.37 0 0 0 .435-.015c.265-.053.488-.17.646-.285.163-.118.286-.244.353-.323.073-.088.12-.158.12-.158l.1.09c.065.052.188.136.347.207.19.084.42.152.668.178.22.023.454.01.67-.032.3-.06.54-.163.713-.266.22-.13.36-.264.444-.35.055-.053.084-.1.107-.134a.82.82 0 0 0 .057-.09s.055.016.125.032c.085.02.198.04.326.048.238.015.54-.003.834-.086.236-.066.47-.17.656-.288 0 0-.015.124-.002.27.014.152.055.325.163.5.13.21.31.345.492.418.12.047.237.068.345.074.108.007.207-.002.288-.012a.818.818 0 0 0 .15-.03c.1-.03.164-.066.183-.078l.02-.017.018-.014s-.004.19.022.41c.028.23.088.5.228.77.147.28.358.536.63.72.28.19.603.286.898.29a1.3 1.3 0 0 0 .3-.027c.272-.063.48-.21.618-.36a1.18 1.18 0 0 0 .267-.483c.048-.163.058-.31.058-.41 0-.16-.024-.26-.024-.26s.08.005.2-.005c.115-.01.27-.035.438-.098a1.5 1.5 0 0 0 .568-.372c.2-.215.35-.51.403-.823.037-.222.032-.454-.014-.675-.04-.193-.116-.388-.213-.538-.042-.066-.09-.122-.132-.173-.074-.087-.14-.143-.14-.143s.165-.006.4-.08a2.22 2.22 0 0 0 .654-.308c.278-.19.573-.5.768-.893.146-.295.24-.645.216-.998-.014-.2-.064-.402-.142-.573a1.26 1.26 0 0 0-.32-.422c-.072-.063-.153-.12-.22-.157-.066-.038-.138-.07-.186-.088a1.04 1.04 0 0 0-.192-.056 1.273 1.273 0 0 0-.305-.02c-.198.005-.38.054-.52.11-.215.085-.36.192-.44.26-.056.05-.103.1-.15.16z"/></svg>',
     apache: '<svg viewBox="0 0 24 24"><path d="M17.805 2.197v.066h.156v.44h.072v-.44h.156v-.066zm.9 0l-.175.353-.172-.353h-.087v.506h.067V2.3l.172.35h.045l.172-.35v.404h.066v-.506zm-4.257 1c-.204.31-.424.66-.66 1.06l-.04.062a44.457 44.457 0 00-1.265 2.29c-.187.36-.38.742-.577 1.146l2.267-.25c.66-.302.955-.578 1.242-.976a15.5 15.5 0 00.23-.342c.23-.363.46-.763.663-1.16.197-.386.37-.767.505-1.11.083-.22.15-.422.198-.6.042-.158.074-.307.1-.45-.884.15-1.965.295-2.668.33z"/></svg>',
     nginx: '<svg viewBox="0 0 24 24"><path d="M12 0L1.605 6v12L12 24l10.395-6V6L12 0zm6 16.59c0 .705-.646 1.29-1.529 1.29-.631 0-1.351-.255-1.801-.81l-6-7.141v6.66c0 .721-.57 1.29-1.274 1.29H7.32c-.721 0-1.29-.6-1.29-1.29V7.41c0-.705.63-1.29 1.5-1.29.646 0 1.38.255 1.83.81l5.97 7.141V7.41c0-.721.6-1.29 1.29-1.29h.075c.72 0 1.29.6 1.29 1.29v9.18H18z"/></svg>',
     tomcat: '<svg viewBox="0 0 24 24"><path d="M12.66 3.494c-.377.637-.544 2.114-.502 3.162l-.005.004c.036.946.165 1.816.372 2.615-3.096.767-6.466 2.795-8.352 4.754-.882-1.19-1.232-2.168-1.336-2.908-.131-.936.092-1.794.646-2.482.867-1.077 2.098-1.153 3.365-.94-.025.2.001.391.081.51.335.494 2.135.668 3.21.189-.793-1.112-2.4-1.654-2.844-1.437a.762.762 0 00-.335.359c-.438-.078-.873-.137-1.19-.134-1.117.008-1.971.398-2.61 1.193-.628.78-.882 1.747-.734 2.8.14.996.633 2.055 1.46 3.154-.138.147-.27.293-.398.436C1.473 17.023 0 19.44 0 19.842v.207h2.658l-.046-.246c-.15-.793.15-1.785.763-2.526.386-.465 1.024-.996 2.027-1.241.891.87 2.027 1.794 3.291 2.685h1.976v-.208a.678.678 0 00-.327-.577c-.312-.204-.794-.232-1.237-.081-.421-.47-.658-1.098-.709-1.877 4.287.38 8.388 2.11 13.015 4.528h2.546l.033-.167c.048-.237-.082-.556-.346-.851-.456-.51-1.349-.752-2.095-.734-.514-.612-3.342-3.591-3.507-3.765a9.626 9.626 0 002.673-2.847h1.388v-.298H20.89a9.81 9.81 0 00.223-.419h.989v-.299h-.845c.628-1.359.975-2.918.942-4.625l.003.002c-.002-.468-.147-2.445-.415-2.989-.726.276-2.047 1.17-2.346 2.084a14.557 14.557 0 00-4.463.056c-.237-.984-1.423-1.736-2.318-2.16z"/></svg>',
+    iis: '<svg viewBox="0 0 24 24"><path d="M0 3.7v16.6h24V3.7H0zm22.4 15H1.6V5.3h20.8v13.4zM3 7.3h1.6v9.4H3V7.3zm3.2 0h1.6v9.4H6.2V7.3zm3.2 0H11v9.4H9.4V7.3zm3.2 0h4.8c1.3 0 2.4 1 2.4 2.3v4.8c0 1.3-1 2.3-2.4 2.3h-4.8V7.3zm1.6 1.6v6.2h3.2c.4 0 .8-.4.8-.8V9.7c0-.4-.4-.8-.8-.8h-3.2z"/></svg>',
     linux: '<svg viewBox="0 0 24 24"><path d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.116.97-.464 1.208-.946.587-.003 1.23-.269 2.26-.334.699-.058 1.574.267 2.577.2.025.134.063.198.114.333l.003.003c.391.778 1.113 1.132 1.884 1.071.771-.06 1.592-.536 2.257-1.306.631-.765 1.683-1.084 2.378-1.503.348-.199.629-.469.649-.853.023-.4-.2-.811-.714-1.376v-.097l-.003-.003c-.17-.2-.25-.535-.338-.926-.085-.401-.182-.786-.492-1.046h-.003c-.059-.054-.123-.067-.188-.135a.357.357 0 00-.19-.064c.431-1.278.264-2.55-.173-3.694-.533-1.41-1.465-2.638-2.175-3.483-.796-1.005-1.576-1.957-1.56-3.368.026-2.152.236-6.133-3.544-6.139z"/></svg>',
     ubuntu: '<svg viewBox="0 0 24 24"><path d="M17.61.455a3.41 3.41 0 0 0-3.41 3.41 3.41 3.41 0 0 0 3.41 3.41 3.41 3.41 0 0 0 3.41-3.41 3.41 3.41 0 0 0-3.41-3.41zM12.92.8C8.923.777 5.137 2.941 3.148 6.451a4.5 4.5 0 0 1 .26-.007 4.92 4.92 0 0 1 2.585.737A8.316 8.316 0 0 1 12.688 3.6 4.944 4.944 0 0 1 13.723.834 11.008 11.008 0 0 0 12.92.8zm9.226 4.994a4.915 4.915 0 0 1-1.918 2.246 8.36 8.36 0 0 1-.273 8.303 4.89 4.89 0 0 1 1.632 2.54 11.156 11.156 0 0 0 .559-13.089zM3.41 7.932A3.41 3.41 0 0 0 0 11.342a3.41 3.41 0 0 0 3.41 3.409 3.41 3.41 0 0 0 3.41-3.41 3.41 3.41 0 0 0-3.41-3.41zm2.027 7.866a4.908 4.908 0 0 1-2.915.358 11.1 11.1 0 0 0 7.991 6.698 11.234 11.234 0 0 0 2.422.249 4.879 4.879 0 0 1-.999-2.85 8.484 8.484 0 0 1-.836-.136 8.304 8.304 0 0 1-5.663-4.32zm11.405.928a3.41 3.41 0 0 0-3.41 3.41 3.41 3.41 0 0 0 3.41 3.41 3.41 3.41 0 0 0 3.41-3.41 3.41 3.41 0 0 0-3.41-3.41z"/></svg>',
     windows: '<svg viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>'
 };
+
+// 카테고리 표시 순서
+const CATEGORY_ORDER = ['DBMS', 'WEB/WAS', 'PC', 'OS'];
 
 // DOM
 const els = {
@@ -59,26 +54,26 @@ const els = {
 // Init
 document.addEventListener('DOMContentLoaded', loadReleases);
 
-// Load releases
+// Load releases from static JSON
 async function loadReleases() {
     try {
-        const res = await fetch(`${CONFIG.api}/repos/${CONFIG.owner}/${CONFIG.repo}/releases`);
+        const res = await fetch(CONFIG.releasesUrl);
         if (!res.ok) {
-            console.error('API Error:', res.status, res.statusText);
+            console.error('Fetch Error:', res.status, res.statusText);
             throw new Error(`릴리즈를 불러올 수 없습니다 (${res.status})`);
         }
 
-        const releases = await res.json();
+        const data = await res.json();
 
-        if (releases.length === 0) {
+        if (!data.latest) {
             els.container.innerHTML = '<div class="empty">릴리즈가 없습니다</div>';
             return;
         }
 
-        renderRelease(releases[0]);
+        renderRelease(data.latest);
 
-        if (releases.length > 1) {
-            renderHistory(releases.slice(1));
+        if (data.history && data.history.length > 0) {
+            renderHistory(data.history);
         } else {
             els.historySection.style.display = 'none';
         }
@@ -88,89 +83,53 @@ async function loadReleases() {
     }
 }
 
-// 패턴 체크 우선순위 (구체적인 것 먼저, OS는 마지막)
-const CHECK_ORDER = ['DBMS', 'WEB/WAS', 'PC', 'OS'];
-
-// 파일 분류
-function getCategory(filename) {
-    for (const catName of CHECK_ORDER) {
-        const cat = CATEGORIES.find(c => c.name === catName);
-        if (cat && cat.patterns.some(p => filename.includes(p))) {
-            return cat;
-        }
-    }
-    return { name: '기타', cssClass: 'etc', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>' };
-}
-
-// 파일에서 브랜드 추출
-function getBrandFromFilename(filename) {
-    const lower = filename.toLowerCase();
-    if (lower.includes('mysql')) return 'mysql';
-    if (lower.includes('oracle')) return 'oracle';
-    if (lower.includes('mssql')) return 'mssql';
-    if (lower.includes('postgresql')) return 'postgresql';
-    if (lower.includes('apache')) return 'apache';
-    if (lower.includes('nginx')) return 'nginx';
-    if (lower.includes('tomcat')) return 'tomcat';
-    if (lower.includes('ubuntu')) return 'ubuntu';
-    if (lower.includes('linux')) return 'linux';
-    if (lower.includes('windows')) return 'windows';
-    return null;
-}
-
-// OS 판별
-function getOS(filename) {
-    const ext = filename.split('.').pop().toLowerCase();
-    if (ext === 'sh') return 'Linux';
-    if (ext === 'ps1' || ext === 'bat' || ext === 'cmd') return 'Windows';
-    return ext.toUpperCase();
-}
-
-// Render release
+// Render release (simplified - data is pre-categorized)
 function renderRelease(release) {
-    els.version.textContent = release.tag_name;
+    els.version.textContent = release.version;
+    els.date.textContent = release.date;
 
-    if (release.published_at) {
-        els.date.textContent = new Date(release.published_at).toLocaleDateString('ko-KR');
-    }
-
-    if (!release.assets || release.assets.length === 0) {
+    const categories = release.categories;
+    if (!categories || Object.keys(categories).length === 0) {
         els.container.innerHTML = '<div class="empty">배포된 파일이 없습니다</div>';
         return;
     }
 
-    // 카테고리별 그룹화
-    const groups = {};
-    CATEGORIES.forEach(c => groups[c.name] = { icon: c.icon, cssClass: c.cssClass, files: [] });
-    groups['기타'] = { icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>', cssClass: 'etc', files: [] };
+    // 파일 개수 업데이트
+    let totalFiles = 0;
+    for (const files of Object.values(categories)) {
+        totalFiles += files.length;
+    }
+    const countEl = document.getElementById('file-count');
+    const containerEl = document.getElementById('file-count-container');
+    if (countEl && containerEl) {
+        countEl.textContent = totalFiles + '개 파일';
+        containerEl.style.display = 'flex';
+    }
 
-    release.assets.forEach(asset => {
-        const cat = getCategory(asset.name);
-        groups[cat.name].files.push(asset);
-    });
-
-    // 렌더링
+    // 렌더링 (순서대로)
     let html = '';
-    for (const [name, data] of Object.entries(groups)) {
-        if (data.files.length === 0) continue;
+    for (const catName of CATEGORY_ORDER) {
+        const files = categories[catName];
+        if (!files || files.length === 0) continue;
+
+        const catInfo = CATEGORY_ICONS[catName] || { cssClass: 'etc', icon: '' };
 
         html += `
             <div class="category">
                 <div class="category-header">
-                    <span class="icon ${data.cssClass}">${data.icon}</span>
-                    <span>${name}</span>
-                    <span class="count">${data.files.length}개</span>
+                    <span class="icon ${catInfo.cssClass}">${catInfo.icon}</span>
+                    <span>${catName}</span>
+                    <span class="count">${files.length}개</span>
                 </div>
                 <div class="file-list">
-                    ${data.files.map(f => {
-                        const brand = getBrandFromFilename(f.name);
-                        const iconClass = brand || 'default';
-                        const iconSvg = brand ? BRAND_ICONS[brand] : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>';
+                    ${files.map(f => {
+                        const iconClass = f.brand || 'default';
+                        const iconSvg = BRAND_ICONS[f.brand] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>';
                         return `
-                        <a href="${f.browser_download_url}" class="file-item" download>
+                        <a href="${f.url}" class="file-item" download>
                             <span class="file-icon ${iconClass}">${iconSvg}</span>
                             <span class="file-name">${f.name}</span>
-                            <span class="file-os">${getOS(f.name)}</span>
+                            <span class="file-os">${f.os}</span>
                         </a>
                     `}).join('')}
                 </div>
@@ -182,13 +141,13 @@ function renderRelease(release) {
 }
 
 // Render history
-function renderHistory(releases) {
-    els.historyList.innerHTML = releases.map(r => `
+function renderHistory(history) {
+    els.historyList.innerHTML = history.map(r => `
         <div class="history-item">
-            <span class="history-version">${r.tag_name}</span>
-            <span class="history-date">${new Date(r.published_at).toLocaleDateString('ko-KR')}</span>
-            <span class="history-count">${r.assets?.length || 0}개 파일</span>
-            <a href="${r.html_url}" target="_blank" class="history-link">GitHub</a>
+            <span class="history-version">${r.version}</span>
+            <span class="history-date">${r.date}</span>
+            <span class="history-count">${r.fileCount}개 파일</span>
+            <a href="${r.url}" target="_blank" class="history-link">GitHub</a>
         </div>
     `).join('');
 }

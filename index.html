@@ -83,20 +83,5 @@
     </div>
 
     <script src="app.js"></script>
-    <script>
-        // Update file count after loading
-        const originalRenderRelease = window.renderRelease;
-        if (originalRenderRelease) {
-            window.renderRelease = function(release) {
-                originalRenderRelease(release);
-                const countEl = document.getElementById('file-count');
-                const containerEl = document.getElementById('file-count-container');
-                if (release.assets && countEl && containerEl) {
-                    countEl.textContent = release.assets.length + '개 파일';
-                    containerEl.style.display = 'flex';
-                }
-            };
-        }
-    </script>
 </body>
 </html>
