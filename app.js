@@ -5,8 +5,14 @@ const CONFIG = {
     api: 'https://api.github.com'
 };
 
-// 카테고리 (순서 중요: 구체적인 것 먼저)
+// 카테고리 (순서: OS -> DBMS -> WEB/WAS -> PC)
 const CATEGORIES = [
+    {
+        name: 'OS',
+        cssClass: 'os',
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>',
+        patterns: ['Linux', 'Ubuntu', 'WindowsServer']
+    },
     {
         name: 'DBMS',
         cssClass: 'dbms',
@@ -24,12 +30,6 @@ const CATEGORIES = [
         cssClass: 'pc',
         icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="12" x="3" y="4" rx="2" ry="2"/><line x1="2" x2="22" y1="20" y2="20"/></svg>',
         patterns: ['WindowsPC', 'PC_Check']
-    },
-    {
-        name: 'OS',
-        cssClass: 'os',
-        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>',
-        patterns: ['Linux', 'Ubuntu', 'WindowsServer']
     }
 ];
 
@@ -163,7 +163,7 @@ function renderRelease(release) {
                         <a href="${f.browser_download_url}" class="file-item" download>
                             <span class="file-icon ${iconClass}">${iconSvg}</span>
                             <span class="file-name">${f.name}</span>
-                            <span class="file-ext">${getOS(f.name)}</span>
+                            <span class="file-os">${getOS(f.name)}</span>
                         </a>
                     `}).join('')}
                 </div>
