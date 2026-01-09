@@ -63,7 +63,10 @@ document.addEventListener('DOMContentLoaded', loadReleases);
 async function loadReleases() {
     try {
         const res = await fetch(`${CONFIG.api}/repos/${CONFIG.owner}/${CONFIG.repo}/releases`);
-        if (!res.ok) throw new Error('릴리즈를 불러올 수 없습니다');
+        if (!res.ok) {
+            console.error('API Error:', res.status, res.statusText);
+            throw new Error(`릴리즈를 불러올 수 없습니다 (${res.status})`);
+        }
 
         const releases = await res.json();
 
