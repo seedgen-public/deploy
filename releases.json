@@ -1,119 +1,152 @@
-﻿{
-    "history":  [
-                    {
-                        "date":  "2026-01-09",
-                        "url":  "https://github.com/seedgen-public/deploy/releases/tag/v26010911b",
-                        "version":  "v26010911b",
-                        "fileCount":  9
-                    },
-                    {
-                        "date":  "2025-01-08",
-                        "url":  "https://github.com/seedgen-public/deploy/releases/tag/v25010817",
-                        "version":  "v25010817",
-                        "fileCount":  11
-                    },
-                    {
-                        "version":  "v25010816",
-                        "date":  "2025-01-07",
-                        "fileCount":  8,
-                        "url":  "https://github.com/seedgen-public/deploy/releases/tag/v25010816"
-                    }
-                ],
-    "latest":  {
-                   "date":  "2026-01-09",
-                   "url":  "https://github.com/seedgen-public/deploy/releases/tag/v26010915d",
-                   "categories":  {
-                                      "WEB/WAS":  [
-                                                      {
-                                                          "brand":  "apache",
-                                                          "url":  "https://github.com/seedgen-public/deploy/releases/download/v26010915d/Apache_Linux.sh",
-                                                          "name":  "Apache_Linux.sh",
-                                                          "os":  "Linux"
-                                                      },
-                                                      {
-                                                          "brand":  "iis",
-                                                          "url":  "https://github.com/seedgen-public/deploy/releases/download/v26010915d/IIS_Windows.ps1",
-                                                          "name":  "IIS_Windows.ps1",
-                                                          "os":  "Windows"
-                                                      },
-                                                      {
-                                                          "brand":  "nginx",
-                                                          "url":  "https://github.com/seedgen-public/deploy/releases/download/v26010915d/Nginx_Linux.sh",
-                                                          "name":  "Nginx_Linux.sh",
-                                                          "os":  "Linux"
-                                                      },
-                                                      {
-                                                          "brand":  "tomcat",
-                                                          "url":  "https://github.com/seedgen-public/deploy/releases/download/v26010915d/Tomcat_Linux.sh",
-                                                          "name":  "Tomcat_Linux.sh",
-                                                          "os":  "Linux"
-                                                      }
-                                                  ],
-                                      "OS":  [
-                                                 {
-                                                     "brand":  "linux",
-                                                     "url":  "https://github.com/seedgen-public/deploy/releases/download/v26010915d/Linux.sh",
-                                                     "name":  "Linux.sh",
-                                                     "os":  "Linux"
-                                                 },
-                                                 {
-                                                     "brand":  "ubuntu",
-                                                     "url":  "https://github.com/seedgen-public/deploy/releases/download/v26010915d/Ubuntu.sh",
-                                                     "name":  "Ubuntu.sh",
-                                                     "os":  "Linux"
-                                                 },
-                                                 {
-                                                     "brand":  "windows",
-                                                     "url":  "https://github.com/seedgen-public/deploy/releases/download/v26010915d/WindowsServer_Check.ps1",
-                                                     "name":  "WindowsServer_Check.ps1",
-                                                     "os":  "Windows"
-                                                 },
-                                                 {
-                                                     "brand":  "linux",
-                                                     "url":  "https://github.com/seedgen-public/deploy/releases/download/v26010915d/JEUS_Linux.sh",
-                                                     "name":  "JEUS_Linux.sh",
-                                                     "os":  "Linux"
-                                                 },
-                                                 {
-                                                     "brand":  "linux",
-                                                     "url":  "https://github.com/seedgen-public/deploy/releases/download/v26010915d/WebtoB_Linux.sh",
-                                                     "name":  "WebtoB_Linux.sh",
-                                                     "os":  "Linux"
-                                                 }
-                                             ],
-                                      "DBMS":  [
-                                                   {
-                                                       "brand":  "mysql",
-                                                       "url":  "https://github.com/seedgen-public/deploy/releases/download/v26010915d/MySQL_Linux.sh",
-                                                       "name":  "MySQL_Linux.sh",
-                                                       "os":  "Linux"
-                                                   },
-                                                   {
-                                                       "brand":  "mariadb",
-                                                       "url":  "https://github.com/seedgen-public/deploy/releases/download/v26010915d/MariaDB_Linux.sh",
-                                                       "name":  "MariaDB_Linux.sh",
-                                                       "os":  "Linux"
-                                                   },
-                                                   {
-                                                       "brand":  "mssql",
-                                                       "url":  "https://github.com/seedgen-public/deploy/releases/download/v26010915d/MSSQL_Windows.ps1",
-                                                       "name":  "MSSQL_Windows.ps1",
-                                                       "os":  "Windows"
-                                                   },
-                                                   {
-                                                       "brand":  "oracle",
-                                                       "url":  "https://github.com/seedgen-public/deploy/releases/download/v26010915d/Oracle_Linux.sh",
-                                                       "name":  "Oracle_Linux.sh",
-                                                       "os":  "Linux"
-                                                   },
-                                                   {
-                                                       "brand":  "postgresql",
-                                                       "url":  "https://github.com/seedgen-public/deploy/releases/download/v26010915d/PostgreSQL_Linux.sh",
-                                                       "name":  "PostgreSQL_Linux.sh",
-                                                       "os":  "Linux"
-                                                   }
-                                               ]
-                                  },
-                   "version":  "v26010915d"
-               }
+{
+  "history": [
+    {
+      "date": "2026-01-09",
+      "url": "https://github.com/seedgen-public/deploy/releases/tag/v26010911b",
+      "version": "v26010911b",
+      "fileCount": 9
+    },
+    {
+      "date": "2025-01-08",
+      "url": "https://github.com/seedgen-public/deploy/releases/tag/v25010817",
+      "version": "v25010817",
+      "fileCount": 11
+    },
+    {
+      "version": "v25010816",
+      "date": "2025-01-07",
+      "fileCount": 8,
+      "url": "https://github.com/seedgen-public/deploy/releases/tag/v25010816"
+    }
+  ],
+  "latest": {
+    "date": "2026-01-09",
+    "url": "https://github.com/seedgen-public/deploy/releases/tag/v26010915d",
+    "version": "v26010915d",
+    "changelog": [
+      { "name": "MySQL_Linux.sh", "type": "updated" },
+      { "name": "JEUS_Linux.sh", "type": "updated" },
+      { "name": "WebtoB_Linux.sh", "type": "new" }
+    ],
+    "categories": {
+      "OS": [
+        {
+          "brand": "linux",
+          "url": "https://github.com/seedgen-public/deploy/releases/download/v26010915d/Linux.sh",
+          "name": "Linux.sh",
+          "os": "Linux",
+          "hash": "a1b2c3d4e5f6g7h8",
+          "modifiedDate": "2026-01-05"
+        },
+        {
+          "brand": "ubuntu",
+          "url": "https://github.com/seedgen-public/deploy/releases/download/v26010915d/Ubuntu.sh",
+          "name": "Ubuntu.sh",
+          "os": "Linux",
+          "hash": "b2c3d4e5f6g7h8i9",
+          "modifiedDate": "2026-01-05"
+        },
+        {
+          "brand": "windows",
+          "url": "https://github.com/seedgen-public/deploy/releases/download/v26010915d/WindowsServer_Check.ps1",
+          "name": "WindowsServer_Check.ps1",
+          "os": "Windows",
+          "hash": "c3d4e5f6g7h8i9j0",
+          "modifiedDate": "2026-01-03"
+        }
+      ],
+      "DBMS": [
+        {
+          "brand": "mysql",
+          "url": "https://github.com/seedgen-public/deploy/releases/download/v26010915d/MySQL_Linux.sh",
+          "name": "MySQL_Linux.sh",
+          "os": "Linux",
+          "hash": "d4e5f6g7h8i9j0k1",
+          "modifiedDate": "2026-01-09"
+        },
+        {
+          "brand": "mariadb",
+          "url": "https://github.com/seedgen-public/deploy/releases/download/v26010915d/MariaDB_Linux.sh",
+          "name": "MariaDB_Linux.sh",
+          "os": "Linux",
+          "hash": "e5f6g7h8i9j0k1l2",
+          "modifiedDate": "2026-01-05"
+        },
+        {
+          "brand": "mssql",
+          "url": "https://github.com/seedgen-public/deploy/releases/download/v26010915d/MSSQL_Windows.ps1",
+          "name": "MSSQL_Windows.ps1",
+          "os": "Windows",
+          "hash": "f6g7h8i9j0k1l2m3",
+          "modifiedDate": "2026-01-05"
+        },
+        {
+          "brand": "oracle",
+          "url": "https://github.com/seedgen-public/deploy/releases/download/v26010915d/Oracle_Linux.sh",
+          "name": "Oracle_Linux.sh",
+          "os": "Linux",
+          "hash": "g7h8i9j0k1l2m3n4",
+          "modifiedDate": "2026-01-05"
+        },
+        {
+          "brand": "postgresql",
+          "url": "https://github.com/seedgen-public/deploy/releases/download/v26010915d/PostgreSQL_Linux.sh",
+          "name": "PostgreSQL_Linux.sh",
+          "os": "Linux",
+          "hash": "h8i9j0k1l2m3n4o5",
+          "modifiedDate": "2026-01-05"
+        }
+      ],
+      "WEB/WAS": [
+        {
+          "brand": "apache",
+          "url": "https://github.com/seedgen-public/deploy/releases/download/v26010915d/Apache_Linux.sh",
+          "name": "Apache_Linux.sh",
+          "os": "Linux",
+          "hash": "i9j0k1l2m3n4o5p6",
+          "modifiedDate": "2026-01-05"
+        },
+        {
+          "brand": "iis",
+          "url": "https://github.com/seedgen-public/deploy/releases/download/v26010915d/IIS_Windows.ps1",
+          "name": "IIS_Windows.ps1",
+          "os": "Windows",
+          "hash": "j0k1l2m3n4o5p6q7",
+          "modifiedDate": "2026-01-05"
+        },
+        {
+          "brand": "nginx",
+          "url": "https://github.com/seedgen-public/deploy/releases/download/v26010915d/Nginx_Linux.sh",
+          "name": "Nginx_Linux.sh",
+          "os": "Linux",
+          "hash": "k1l2m3n4o5p6q7r8",
+          "modifiedDate": "2026-01-05"
+        },
+        {
+          "brand": "tomcat",
+          "url": "https://github.com/seedgen-public/deploy/releases/download/v26010915d/Tomcat_Linux.sh",
+          "name": "Tomcat_Linux.sh",
+          "os": "Linux",
+          "hash": "l2m3n4o5p6q7r8s9",
+          "modifiedDate": "2026-01-05"
+        },
+        {
+          "brand": "jeus",
+          "url": "https://github.com/seedgen-public/deploy/releases/download/v26010915d/JEUS_Linux.sh",
+          "name": "JEUS_Linux.sh",
+          "os": "Linux",
+          "hash": "m3n4o5p6q7r8s9t0",
+          "modifiedDate": "2026-01-09"
+        },
+        {
+          "brand": "webtob",
+          "url": "https://github.com/seedgen-public/deploy/releases/download/v26010915d/WebtoB_Linux.sh",
+          "name": "WebtoB_Linux.sh",
+          "os": "Linux",
+          "hash": "n4o5p6q7r8s9t0u1",
+          "modifiedDate": "2026-01-09"
+        }
+      ]
+    }
+  }
 }

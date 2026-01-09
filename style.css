@@ -640,3 +640,94 @@ body {
     background: var(--accent-light);
     color: var(--text-primary);
 }
+
+/* ============================================
+   File Badge (NEW / UPDATED)
+   ============================================ */
+.file-badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 2px;
+    margin-left: var(--space-2);
+    flex-shrink: 0;
+}
+
+.file-badge.new {
+    background: #DCFCE7;
+    color: #16A34A;
+    border: 1px solid #86EFAC;
+}
+
+.file-badge.updated {
+    background: #FEF3C7;
+    color: #D97706;
+    border: 1px solid #FCD34D;
+}
+
+/* File Modified Date */
+.file-modified {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-left: auto;
+    margin-right: var(--space-2);
+    flex-shrink: 0;
+}
+
+/* ============================================
+   Changelog Section
+   ============================================ */
+.changelog {
+    margin-bottom: var(--space-4);
+}
+
+.changelog-header {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    padding: var(--space-3) var(--space-4);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-light);
+    border-bottom: none;
+}
+
+.changelog-list {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.changelog-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.8rem;
+    padding: var(--space-1) var(--space-2);
+    background: var(--bg-elevated);
+    border-radius: 4px;
+}
+
+.changelog-badge {
+    font-size: 0.55rem;
+    font-weight: 700;
+    padding: 1px 4px;
+    border-radius: 2px;
+}
+
+.changelog-item.new .changelog-badge {
+    background: #16A34A;
+    color: white;
+}
+
+.changelog-item.updated .changelog-badge {
+    background: #D97706;
+    color: white;
+}
+
+.changelog-name {
+    font-family: var(--font-mono);
+}

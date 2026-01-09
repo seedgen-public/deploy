@@ -99,6 +99,9 @@ function renderRelease(release) {
         return;
     }
 
+    // Changelog 렌더링
+    renderChangelog(release.changelog);
+
     // 파일 개수 업데이트
     let totalFiles = 0;
     for (const files of Object.values(categories)) {
@@ -109,6 +112,14 @@ function renderRelease(release) {
     if (countEl && containerEl) {
         countEl.textContent = totalFiles + '개 파일';
         containerEl.style.display = 'flex';
+    }
+
+    // changelog를 맵으로 변환 (빠른 조회용)
+    const changelogMap = {};
+    if (release.changelog) {
+        release.changelog.forEach(c => {
+            changelogMap[c.name] = c.type;
+        });
     }
 
     // 렌더링 (순서대로)
@@ -130,10 +141,24 @@ function renderRelease(release) {
                     ${files.map(f => {
                         const iconClass = f.brand || 'default';
                         const iconSvg = BRAND_ICONS[f.brand] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>';
+
+                        // 배지 생성
+                        const changeType = changelogMap[f.name];
+                        const badgeHtml = changeType
+                            ? `<span class="file-badge ${changeType}">${changeType === 'new' ? 'NEW' : 'UPDATED'}</span>`
+                            : '';
+
+                        // 수정일 표시
+                        const modifiedHtml = f.modifiedDate
+                            ? `<span class="file-modified">${f.modifiedDate}</span>`
+                            : '';
+
                         return `
                         <a href="${f.url}" class="file-item" download>
                             <span class="file-icon ${iconClass}">${iconSvg}</span>
                             <span class="file-name">${f.name}</span>
+                            ${badgeHtml}
+                            ${modifiedHtml}
                             <span class="file-os">${f.os}</span>
                         </a>
                     `}).join('')}
@@ -143,6 +168,30 @@ function renderRelease(release) {
     }
 
     els.container.innerHTML = html;
+}
+
+// Render changelog section
+function renderChangelog(changelog) {
+    const section = document.getElementById('changelog-section');
+    if (!section) return;
+
+    if (!changelog || changelog.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+
+    section.innerHTML = `
+        <div class="changelog-header">이번 릴리즈 변경 사항</div>
+        <div class="changelog-list">
+            ${changelog.map(c => `
+                <div class="changelog-item ${c.type}">
+                    <span class="changelog-badge">${c.type === 'new' ? 'NEW' : 'UPDATED'}</span>
+                    <span class="changelog-name">${c.name}</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
+    section.style.display = 'block';
 }
 
 // Render history
