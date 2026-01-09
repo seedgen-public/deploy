@@ -137,32 +137,44 @@ function renderRelease(release) {
                     <span>${catName}</span>
                     <span class="count">${files.length}개</span>
                 </div>
-                <div class="file-list">
-                    ${files.map(f => {
-                        const iconClass = f.brand || 'default';
-                        const iconSvg = BRAND_ICONS[f.brand] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>';
+                <table class="file-table">
+                    <thead>
+                        <tr>
+                            <th class="th-name">파일명</th>
+                            <th class="th-status">상태</th>
+                            <th class="th-date">수정일</th>
+                            <th class="th-hash">Hash</th>
+                            <th class="th-os">OS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${files.map(f => {
+                            const iconClass = f.brand || 'default';
+                            const iconSvg = BRAND_ICONS[f.brand] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>';
 
-                        // 배지 생성
-                        const changeType = changelogMap[f.name];
-                        const badgeHtml = changeType
-                            ? `<span class="file-badge ${changeType}">${changeType === 'new' ? 'NEW' : 'UPDATED'}</span>`
-                            : '';
+                            // 배지 생성
+                            const changeType = changelogMap[f.name];
+                            const badgeHtml = changeType
+                                ? `<span class="file-badge ${changeType}">${changeType === 'new' ? 'NEW' : 'UPDATED'}</span>`
+                                : '<span class="file-badge none">-</span>';
 
-                        // 수정일 표시
-                        const modifiedHtml = f.modifiedDate
-                            ? `<span class="file-modified">${f.modifiedDate}</span>`
-                            : '';
+                            // 해시 (앞 8자리만 표시)
+                            const shortHash = f.hash ? f.hash.substring(0, 8) : '-';
 
-                        return `
-                        <a href="${f.url}" class="file-item" download>
-                            <span class="file-icon ${iconClass}">${iconSvg}</span>
-                            <span class="file-name">${f.name}</span>
-                            ${badgeHtml}
-                            ${modifiedHtml}
-                            <span class="file-os">${f.os}</span>
-                        </a>
-                    `}).join('')}
-                </div>
+                            return `
+                            <tr class="file-row" onclick="window.open('${f.url}', '_blank')">
+                                <td class="td-name">
+                                    <span class="file-icon ${iconClass}">${iconSvg}</span>
+                                    <span class="file-name">${f.name}</span>
+                                </td>
+                                <td class="td-status">${badgeHtml}</td>
+                                <td class="td-date">${f.modifiedDate || '-'}</td>
+                                <td class="td-hash"><code title="${f.hash || ''}">${shortHash}</code></td>
+                                <td class="td-os"><span class="os-tag ${f.os.toLowerCase()}">${f.os}</span></td>
+                            </tr>
+                        `}).join('')}
+                    </tbody>
+                </table>
             </div>
         `;
     }
