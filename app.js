@@ -85,10 +85,14 @@ async function loadReleases() {
     }
 }
 
+// 패턴 체크 우선순위 (구체적인 것 먼저, OS는 마지막)
+const CHECK_ORDER = ['DBMS', 'WEB/WAS', 'PC', 'OS'];
+
 // 파일 분류
 function getCategory(filename) {
-    for (const cat of CATEGORIES) {
-        if (cat.patterns.some(p => filename.includes(p))) {
+    for (const catName of CHECK_ORDER) {
+        const cat = CATEGORIES.find(c => c.name === catName);
+        if (cat && cat.patterns.some(p => filename.includes(p))) {
             return cat;
         }
     }
