@@ -238,7 +238,17 @@
                                                        "brand":  "postgresql",
                                                        "os":  "Linux"
                                                    }
-                                               ]
+                                               ],
+                                      "PC":  [
+                                                 {
+                                                     "url":  "https://github.com/seedgen-public/deploy/releases/download/v26011319h/PC_Windows.ps1",
+                                                     "name":  "PC_Windows.ps1",
+                                                     "hash":  "new_file_hash",
+                                                     "modifiedDate":  "2026-01-13",
+                                                     "brand":  "windows",
+                                                     "os":  "Windows"
+                                                 }
+                                             ]
                                   },
                    "version":  "v26011319h"
                }
